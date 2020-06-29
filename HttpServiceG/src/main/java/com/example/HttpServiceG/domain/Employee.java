@@ -37,13 +37,11 @@ public class Employee {
 
     public void setPosition(JobPosition position) {
         this.position = position;
+        this.salary = position.getSalary();
     }
 
     public int getSalary() {
         return salary;
     }
 
-    public void setSalary(int salary) {
-        this.salary = salary;
-    }
 }

@@ -1,10 +1,11 @@
 package com.example.HttpServiceG.controller;
 
 import com.example.HttpServiceG.domain.Employee;
+import com.example.HttpServiceG.domain.JobPosition;
 import com.example.HttpServiceG.presistence.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 import static com.example.HttpServiceG.domain.JobPosition.boss;
@@ -27,7 +28,6 @@ public class EmployeeController {
         employee.setId(36897L);
         employee.setName("pedro");
         employee.setPosition(boss);
-        employee.setSalary(1000);
 
         employeeRepository.save(employee);
 
@@ -48,15 +48,28 @@ public class EmployeeController {
     }
 
     @PutMapping ("/Employee/{id}")
-    public String update ()
+    public Employee update (@RequestBody Employee employee, @PathVariable Long id)
     {
-        return "hola";
+
+        return employeeRepository.findById(id)
+                .map(currentEmployee ->
+                {
+                    currentEmployee.setName(employee.getName());
+                    currentEmployee.setPosition(employee.getPosition());
+                return employeeRepository.save(currentEmployee);
+                })
+                .orElseGet(()->
+                {
+                    employee.setId(id);
+                    return employeeRepository.save(employee);
+                });
     }
 
     @DeleteMapping ("/delete")
-    public String delete ()
+    public void delete (@PathVariable Long id)
+
     {
-        return "hola";
+        employeeRepository.deleteById(id);
     }
 
 }
