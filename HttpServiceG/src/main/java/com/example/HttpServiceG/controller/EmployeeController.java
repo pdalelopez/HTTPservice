@@ -6,6 +6,7 @@ import com.example.HttpServiceG.presistence.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.websocket.server.PathParam;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.HttpServiceG.domain.JobPosition.boss;
@@ -21,23 +22,35 @@ public class EmployeeController {
         this.employeeRepository=employeeRepository;
     }
 
-    @GetMapping("/testpost")
+    @GetMapping("/test")
     public String save ()
     {
         Employee employee= new Employee();
-        employee.setId(36897L);
-        employee.setName("pedro");
+        employee.setName("xavi");
         employee.setPosition(boss);
 
         employeeRepository.save(employee);
 
-        return "primer registro";
+        return "registro prueba creado";
     }
 
     @GetMapping("/Employee")
     public List<Employee> getAll ()
     {
         return employeeRepository.findAll();
+    }
+
+    @GetMapping("/Employee/{position}")
+    public List<Employee> getByPosition (@PathVariable JobPosition position)
+    {
+        List<Employee> byPositionList= new ArrayList<>();
+        for (Employee employee: employeeRepository.findAll()) {
+            if (employee.getPosition().equals(position)) {
+                byPositionList.add(employee);
+            }
+        }
+
+        return byPositionList;
     }
 
     @PostMapping("/Employee")
@@ -65,7 +78,7 @@ public class EmployeeController {
                 });
     }
 
-    @DeleteMapping ("/delete")
+    @DeleteMapping ("/delete/{id}")
     public void delete (@PathVariable Long id)
 
     {
