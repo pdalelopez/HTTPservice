@@ -79,10 +79,11 @@ public class EmployeeController {
     }
 
     @DeleteMapping ("/delete/{id}")
-    public void delete (@PathVariable Long id)
+    public String delete (@PathVariable Long id)
 
     {
         employeeRepository.deleteById(id);
+        return "the employee #= "+ id+ " was successful deleted";
     }
 
 }
